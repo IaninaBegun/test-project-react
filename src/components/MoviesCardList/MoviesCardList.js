@@ -55,7 +55,7 @@ function MoviesCardList ( {
 
   return (
     <section className="movies page__section">
-      {!isNotFound ? ( `Ничего не найдено`) :
+      {!isNotFound || !moviesToDisplay || !foundMovies ? ( `Ничего не найдено`) :
 
         (<ul className="movies__list">
 
@@ -78,7 +78,7 @@ function MoviesCardList ( {
 
       <button
         type="submit"
-        className={ !isSavedMovie && moviesToRender < foundMovies.length ? `movies__btn` : `movies__btn_invsible`}
+        className={ !isSavedMovie || !foundMovies && moviesToRender < foundMovies.length ? `movies__btn` : `movies__btn_invsible`}
         onClick={() => handleShowMoreMovies()}
       >Ещё</button>
 

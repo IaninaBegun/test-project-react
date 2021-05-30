@@ -299,6 +299,9 @@ function App() {
 
   function searchMovies (dataMovie) {
 
+    console.log('я в поиске');
+    console.log(adjustedMovies);
+
     const moviesFoundArray = adjustedMovies.filter(movie => {
       return movie.nameRU.toLowerCase().includes(dataMovie);
     });
