@@ -14,12 +14,24 @@ function Movies ({
   onSavedMovie,
   isLoading,
   onFilter,
-  onErr
+  onErr,
+  initialMovies
   }) {
 
 
   /* стейт-переменная для смены состояния чекбокса */
   const [ isFilterChecked, setFilterChecked ] = React.useState(false);
+  const localTotalMovies = localStorage.getItem('moviesTotal');
+
+  /* поиск фильмов */
+  const handleSearchMovies = (movieToFind) => {
+    if (!localTotalMovies || localTotalMovies.length <= 0) {
+      initialMovies();
+      onSearch(movieToFind);
+    } else {
+      onSearch(movieToFind);
+    }
+  }
 
   /*movies, функция получения числа отображаемых изначально после поиска карточек */
   const getMoviesNumber = () => {
@@ -68,7 +80,7 @@ function Movies ({
     <section className="main">
 
       <SearchForm
-        onSearch={onSearch}
+        onSearch={handleSearchMovies}
       />
       <FilterCheckbox
         onFilter={handleFilterState}

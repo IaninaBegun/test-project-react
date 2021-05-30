@@ -104,7 +104,7 @@ function Register ({ onRegister, onError }) {
       <p className="register__welcomeMessage">
         Добро пожаловать!
       </p>
-      <form onSubmit={() => handleSubmit()} className="register__form" noValidate>
+      <form onSubmit={handleSubmit} className="register__form" noValidate>
         <label htmlFor="registration-name" className="registration__label">Имя</label>
         <input
           className={nameInputClassName}

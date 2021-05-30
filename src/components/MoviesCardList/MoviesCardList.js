@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 
@@ -8,6 +9,11 @@ function MoviesCardList ( {
     onSavedMovie,
     onDeleteMovie,
   } ) {
+
+  const location = useLocation();
+  const moviesLocation = location.pathname === '/movies';
+  const savedMoviesLocation = location.pathname === '/saved-movies';
+
 
   const isNotFound = foundMovies && foundMovies.length > 0 ? true : false;
 
@@ -45,7 +51,7 @@ function MoviesCardList ( {
     setMoviesToRender(moviesToRender + getMoviesToShowNumber());
   };
 
-  const moviesToDisplay = !isSavedMovie ? foundMovies.slice(0, moviesToRender) : foundMovies;
+  const moviesToDisplay = !isSavedMovie && foundMovies ? foundMovies.slice(0, moviesToRender) : foundMovies;
 
   return (
     <section className="movies page__section">

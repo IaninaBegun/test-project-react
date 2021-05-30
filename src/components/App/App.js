@@ -45,7 +45,7 @@ function App() {
     if (!jwt) return;
     const savedFoundMovies = localStorage.getItem('moviesFound');
     const moviesSavedByUser = localStorage.getItem('moviesSaved');
-    if (jwt) {
+    if (jwt && savedMovies) {
       setMoviesFound(JSON.parse(savedFoundMovies));
       setSavedMovies(JSON.parse(moviesSavedByUser));
     }
@@ -67,37 +67,7 @@ function App() {
       });
   }, [isLoggedIn]);
 
-  /* эффект для загрузки и сохранения сохранённых фильмов
-  пользователя при входе на сайт */
 
-  React.useEffect(() => {
-    if (!isLoggedIn) return;
-    const jwt = localStorage.getItem('jwt');
-    if(jwt) {
-      MainApi.getSavedMovies()
-      .then((res) => {
-        if (res) {
-          setSavedMovies(res);
-        }
-      })
-      .catch((err) => {
-        setInfoTooltipPopupOpen(true);
-        if (err === 400) {
-          setErrMessage( `Ошибка 400: Токен не передан или передан не в том формате.` );
-        }
-        if (err === 401) {
-          setErrMessage( 'Ошибка 401: Переданный токен некорректен.' );
-        } else {
-          setErrMessage('Что-то пошло не так');
-        }
-      })
-      .finally(() => {
-        setErrMessage('');
-        closeAllPopups();
-      })
-    }
-    localStorage.setItem('moviesSaved', JSON.stringify(savedMovies) );
-  }, [isLoggedIn, savedMovies]);
 
   /* функция для проверки токена пользователя */
 
@@ -310,7 +280,7 @@ function App() {
 
   /* функция для получения фильмов с сервера BeatFilm */
 
-  function searchMovies (dataMovie) {
+  function getInitialMovies () {
 
     setIsLoading(true);
     MoviesApi.getMovies()
@@ -325,6 +295,10 @@ function App() {
         setIsLoading(false);
         setFindingErr(false);
       })
+  }
+
+  function searchMovies (dataMovie) {
+
     const moviesFoundArray = adjustedMovies.filter(movie => {
       return movie.nameRU.toLowerCase().includes(dataMovie);
     });
@@ -383,7 +357,7 @@ function App() {
             component={Movies}
             isLoggedIn={isLoggedIn}
             onSearch={searchMovies}
-            movies={adjustedMovies}
+            initialMovies={getInitialMovies}
             foundMovies={moviesFound}
             isSaved={false}
             onSavedMovie={handleCLickMovieButton}
@@ -395,7 +369,6 @@ function App() {
           <ProtectedRoute exact path="/saved-movies"
             component={SavedMovies}
             isLoggedIn={isLoggedIn}
-            foundMovies={savedMovies}
             isSaved={true}
             isLoading={isLoading}
             onDeleteMovie={handleDeleteMovie}
